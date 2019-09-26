@@ -96,6 +96,21 @@ with DispatchCleanup {
     res() ?= ("POST" + sample)
   }
 
+
+  property("PUT alphaString body with setBody and get response") = forAll(Gen.alphaStr) { (sample: String) =>
+    val res = Http.default(
+      (localhost / "echobody").PUT.setBody(sample) > as.String
+    )
+    res() ?= ("PUT" + sample)
+  }
+
+  property("PUT alphaString body with << and get response") = forAll(Gen.alphaStr) { (sample: String) =>
+    val res = Http.default(
+      (localhost / "echobody").PUT << sample > as.String
+    )
+    res() ?= ("PUT" + sample)
+  }
+
   property("GET and handle") = forAll(Gen.alphaStr) { (sample: String) =>
     val res = Http.default(
       localhost / "echo" <<? Map("echo" -> sample) > as.String
@@ -184,4 +199,11 @@ with DispatchCleanup {
       realm.getPassword ?= password
     }
   }
+//  property("foo") = {
+//    val req = url("http://bla")
+//    forAll(Gen.oneOf(req.Post)) { case (r) =>
+//      r << "body"
+//
+//    }
+//  }
 }
